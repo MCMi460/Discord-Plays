@@ -5,6 +5,7 @@
 ## Warning!
 
 This bot allows control of the keyboard of your computer while it is running to allow Discord users to play a game you stream to a voice-channel. Please be cautious of what power you give strangers over your computer.
+
 If, at any time, you feel unsafe of running this program on your computer but still would like to use it, please download a Virtual Machine and run it there.
 
 ---
@@ -31,8 +32,7 @@ Open a command-line, go to the directory with the `bot.py`, and run `python3 bot
 
 The bot is in its beta at the moment, as there are many better ways to code it that would allow better user-input, safer environments, etc. At the moment, please be be patient for new updates. Feel free to use the code as-is, however. Thank you.
 
-"Progress Bar"
-█████████▁▁▁ 75%
+\[█████████▁▁▁\] 75% Complete
 
 ---
 ## Requirements:
