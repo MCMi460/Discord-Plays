@@ -8,3 +8,10 @@ activity = 'all the games'
 textchannelid = 1234567890123
 # Your ID for stopping the bot or calibrating it.
 myid = 1234567890123
+
+# Keys
+
+k_up = 'q'
+k_down = 'w'
+k_left = 'e'
+k_right = 'r'

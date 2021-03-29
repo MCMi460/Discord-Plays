@@ -23,31 +23,31 @@ async def unpresskey():
     if keyp:
         keyboard.release('1')
         keyboard.release('2')
-        keyboard.release('q')
-        keyboard.release('w')
-        keyboard.release('e')
-        keyboard.release('r')
+        keyboard.release(k_up)
+        keyboard.release(k_down)
+        keyboard.release(k_left)
+        keyboard.release(k_right)
         keyp = False
 
 @bot.event
 async def on_message(message):
     if message.channel.id == textchannelid:
         if message.content.lower() == "u" or message.content.lower() == "up":
-            keyboard.press('q')
+            keyboard.press(k_up)
             time.sleep(0.2)
-            keyboard.release('q')
+            keyboard.release(k_up)
         elif message.content.lower() == "d" or message.content.lower() == "down":
-            keyboard.press('w')
+            keyboard.press(k_down)
             time.sleep(0.2)
-            keyboard.release('w')
+            keyboard.release(k_down)
         elif message.content.lower() == "l" or message.content.lower() == "left":
-            keyboard.press('e')
+            keyboard.press(k_left)
             time.sleep(0.2)
-            keyboard.release('e')
+            keyboard.release(k_left)
         elif message.content.lower() == "r" or message.content.lower() == "right":
-            keyboard.press('r')
+            keyboard.press(k_right)
             time.sleep(0.2)
-            keyboard.release('r')
+            keyboard.release(k_right)
         elif message.content.lower() == "a":
             keyboard.press('1')
             time.sleep(0.2)
@@ -136,52 +136,52 @@ async def on_message(message):
                 try:
                     if int(m) < 16:
                         for x in range(0,int(m)):
-                            keyboard.press('q')
+                            keyboard.press(k_up)
                             time.sleep(0.2)
-                            keyboard.release('q')
+                            keyboard.release(k_up)
                             time.sleep(0.1)
                 except:
                     if m == "hold":
-                        keyboard.press('q')
+                        keyboard.press(k_up)
                         keyp = True
             elif m.startswith('d '):
                 m = m.replace('d ','')
                 try:
                     if int(m) < 16:
                         for x in range(0,int(m)):
-                            keyboard.press('w')
+                            keyboard.press(k_down)
                             time.sleep(0.2)
-                            keyboard.release('w')
+                            keyboard.release(k_down)
                             time.sleep(0.1)
                 except:
                     if m == "hold":
-                        keyboard.press('w')
+                        keyboard.press(k_down)
                         keyp = True
             elif m.startswith('l '):
                 m = m.replace('l ','')
                 try:
                     if int(m) < 16:
                         for x in range(0,int(m)):
-                            keyboard.press('e')
+                            keyboard.press(k_left)
                             time.sleep(0.2)
-                            keyboard.release('e')
+                            keyboard.release(k_left)
                             time.sleep(0.1)
                 except:
                     if m == "hold":
-                        keyboard.press('e')
+                        keyboard.press(k_left)
                         keyp = True
             elif m.startswith('r '):
                 m = m.replace('r ','')
                 try:
                     if int(m) < 16:
                         for x in range(0,int(m)):
-                            keyboard.press('r')
+                            keyboard.press(k_right)
                             time.sleep(0.2)
-                            keyboard.release('r')
+                            keyboard.release(k_right)
                             time.sleep(0.1)
                 except:
                     if m == "hold":
-                        keyboard.press('r')
+                        keyboard.press(k_right)
                         keyp = True
             elif m.startswith('lb '):
                 m = m.replace('lb ','')
@@ -273,5 +273,13 @@ async def restart(ctx):
         await ctx.send("Restarting/ending session...")
         print("Restarting...")
         os.execl(sys.executable, sys.executable, *sys.argv)
+
+@bot.command()
+async def calibrate(ctx,button:string=None,calkey:string=None):
+    if ctx.author.id == myid:
+        if not button or not calkey:
+            await ctx.send("Please specifiy a button and key to calibrate.")
+            return
+        # do this later lol
 
 bot.run(token)
