@@ -275,7 +275,7 @@ async def restart(ctx):
         os.execl(sys.executable, sys.executable, *sys.argv)
 
 @bot.command()
-async def calibrate(ctx,button:string=None,calkey:string=None):
+async def calibrate(ctx,button:str=None,calkey:str=None):
     if ctx.author.id == myid:
         if not button or not calkey:
             await ctx.send("Please specifiy a button and key to calibrate.")
