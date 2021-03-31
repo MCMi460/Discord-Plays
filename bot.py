@@ -1,8 +1,7 @@
 import discord
-from discord.ext import commands, tasks
+from discord.ext import commands
 import asyncio
 import os
-import time
 import sys
 from discord.utils import get
 from discord.ext.commands import Bot
@@ -11,25 +10,10 @@ from setup import token, prefix, activity, textchannelid, myid, k_up, k_down, k_
 from pynput.keyboard import Key, Controller
 
 keyboard = Controller()
-keyp = False
 intents = discord.Intents.default()
 bot = commands.Bot(command_prefix=prefix,intents=intents)
 typeStatusPlay = discord.ActivityType.playing
 bot.remove_command("help")
-
-@tasks.loop(seconds=25.0)
-async def unpresskey():
-    global keyp
-    if keyp:
-        keyboard.release(k_a)
-        keyboard.release(k_b)
-        keyboard.release(k_x)
-        keyboard.release(k_y)
-        keyboard.release(k_up)
-        keyboard.release(k_down)
-        keyboard.release(k_left)
-        keyboard.release(k_right)
-        keyp = False
 
 @bot.event
 async def on_message(message):
@@ -97,7 +81,8 @@ async def on_message(message):
                 except:
                     if m == "hold":
                         keyboard.press(k_a)
-                        keyp = True
+                        await asyncio.sleep(10)
+                        keyboard.release(k_a)
             elif m.startswith('b '):
                 m = m.replace('b ','')
                 try:
@@ -110,7 +95,8 @@ async def on_message(message):
                 except:
                     if m == "hold":
                         keyboard.press(k_b)
-                        keyp = True
+                        await asyncio.sleep(10)
+                        keyboard.release(k_b)
             elif m.startswith('x '):
                 m = m.replace('x ','')
                 try:
@@ -123,7 +109,8 @@ async def on_message(message):
                 except:
                     if m == "hold":
                         keyboard.press(k_x)
-                        keyp = True
+                        await asyncio.sleep(10)
+                        keyboard.release(k_x)
             elif m.startswith('y '):
                 m = m.replace('y ','')
                 try:
@@ -136,7 +123,8 @@ async def on_message(message):
                 except:
                     if m == "hold":
                         keyboard.press(k_y)
-                        keyp = True
+                        await asyncio.sleep(10)
+                        keyboard.release(k_y)
             elif m.startswith('u '):
                 m = m.replace('u ','')
                 try:
@@ -149,7 +137,8 @@ async def on_message(message):
                 except:
                     if m == "hold":
                         keyboard.press(k_up)
-                        keyp = True
+                        await asyncio.sleep(10)
+                        keyboard.release(k_up)
             elif m.startswith('d '):
                 m = m.replace('d ','')
                 try:
@@ -175,7 +164,8 @@ async def on_message(message):
                 except:
                     if m == "hold":
                         keyboard.press(k_left)
-                        keyp = True
+                        await asyncio.sleep(10)
+                        keyboard.release(k_left)
             elif m.startswith('r '):
                 m = m.replace('r ','')
                 try:
@@ -188,7 +178,8 @@ async def on_message(message):
                 except:
                     if m == "hold":
                         keyboard.press(k_right)
-                        keyp = True
+                        await asyncio.sleep(10)
+                        keyboard.release(k_right)
             elif m.startswith('lb '):
                 m = m.replace('lb ','')
                 try:
@@ -199,7 +190,10 @@ async def on_message(message):
                             keyboard.release(k_lb)
                             await asyncio.sleep(0.1)
                 except:
-                    pass
+                    if m == "hold":
+                        keyboard.press(k_lb)
+                        await asyncio.sleep(10)
+                        keyboard.release(k_lb)
             elif m.startswith('rb '):
                 m = m.replace('rb ','')
                 try:
@@ -210,7 +204,10 @@ async def on_message(message):
                             keyboard.release(k_rb)
                             await asyncio.sleep(0.1)
                 except:
-                    pass
+                    if m == "hold":
+                        keyboard.press(k_rb)
+                        await asyncio.sleep(10)
+                        keyboard.release(k_rb)
             elif m.startswith('start '):
                 m = m.replace('start ','')
                 try:
@@ -221,7 +218,10 @@ async def on_message(message):
                             keyboard.release(k_start)
                             await asyncio.sleep(0.1)
                 except:
-                    pass
+                    if m == "hold":
+                        keyboard.press(k_start)
+                        await asyncio.sleep(10)
+                        keyboard.release(k_start)
             elif m.startswith('select '):
                 m = m.replace('select ','')
                 try:
@@ -232,7 +232,10 @@ async def on_message(message):
                             keyboard.release(k_select)
                             await asyncio.sleep(0.1)
                 except:
-                    pass
+                    if m == "hold":
+                        keyboard.press(k_select)
+                        await asyncio.sleep(10)
+                        keyboard.release(k_select)
     await bot.process_commands(message)
 
 @bot.event
@@ -241,7 +244,6 @@ async def on_ready():
     print(f'Present in {len(bot.guilds)} servers.')
     print('------')
     await bot.change_presence(status=discord.Status.online, activity=discord.Activity(type=typeStatusPlay, name=activity))
-    unpresskey.start()
 
 @bot.command(pass_context=True)
 async def help(ctx):
@@ -262,7 +264,7 @@ async def help(ctx):
     embed.add_field(name="Select", value="Type `Select`")
     embed.add_field(name="Left Trigger", value="Type `LB`")
     embed.add_field(name="Right Trigger", value="Type `RB`")
-    embed.add_field(name="Stacking and holding buttons", value="You can stack button presses or hold them, as well. For example, you can press the A button 15 times (which is the max possible to stack) consecutively by typing `A 15`. You can hold the A button for up to 25 seconds by typing `A hold`. The stack function works for every button, but you can only hold the A, B, Up, Down, Left, and Right buttons.", inline=False)
+    embed.add_field(name="Stacking and holding buttons", value="You can stack button presses or hold them, as well. For example, you can press the A button 15 times (which is the max possible to stack) consecutively by typing `A 15`. You can hold the A button for 10 seconds by typing `A hold`. These functions work for every button.", inline=False)
     await ctx.send(embed=embed)
 
 @bot.command()
@@ -285,7 +287,7 @@ async def calibrate(ctx,button:str=None,calkey:str=None):
     if ctx.author.id == myid:
         global k_up, k_down, k_left, k_right, k_a, k_b, k_x, k_y, k_lb, k_rb, k_start, k_select
         if not button:
-            await ctx.send("Please specifiy a button to calibrate. You can calibrate to these buttons:\n"
+            await ctx.send(f"Please specifiy a button to calibrate (example: {prefix}calibrate right 3). You can calibrate to these buttons:\n"
             "UP\n"
             "DOWN\n"
             "LEFT\n"
