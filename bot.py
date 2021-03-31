@@ -266,7 +266,7 @@ async def help(ctx):
     embed.add_field(name="Right Trigger", value="Type `RB`")
     embed.add_field(name="Stacking and holding buttons", value="You can stack button presses or hold them, as well. For example, you can press the A button 15 times (which is the max possible to stack) consecutively by typing `A 15`. You can hold the A button for 10 seconds by typing `A hold`. These functions work for every button.", inline=False)
     if ctx.author.id == myid:
-        embed.add_field(name=f"{prefix}calibrate", value=f"This command is used to change what key a button will be. For example, `{prefix}calibrate A {key_a}` would change the A button to {key_a}. Of course, the A button is already {key_a}, but you get the point.", inline=False)
+        embed.add_field(name=f"{prefix}calibrate", value=f"This command is used to change what key a button will be. For example, `{prefix}calibrate A {k_a}` would change the A button to {k_a}. Of course, the A button is already {k_a}, but you get the point.", inline=False)
     await ctx.send(embed=embed)
 
 @bot.command()
