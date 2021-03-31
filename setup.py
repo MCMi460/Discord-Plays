@@ -1,5 +1,5 @@
 # The token the bot runs through. Get this from your developer application.
-token = 'ODE1MDYwNzYzNjgwMDQ3MTE2.YDm6fQ.IXXA72-dPza2OyHenBDV532BqJk'
+token = 'x'
 # The prefix the bot accepts commands via.
 prefix = '$'
 # The game the bot's status is playing.
