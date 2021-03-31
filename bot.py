@@ -7,7 +7,7 @@ import sys
 from discord.utils import get
 from discord.ext.commands import Bot
 from discord.ext.commands import has_permissions
-from setup import token, prefix, activity, textchannelid, myid
+from setup import token, prefix, activity, textchannelid, myid, k_up, k_down, k_left, k_right, k_a, k_b, k_x, k_y, k_lb, k_rb, k_start, k_select
 from pynput.keyboard import Key, Controller
 
 keyboard = Controller()
@@ -21,8 +21,10 @@ bot.remove_command("help")
 async def unpresskey():
     global keyp
     if keyp:
-        keyboard.release('1')
-        keyboard.release('2')
+        keyboard.release(k_a)
+        keyboard.release(k_b)
+        keyboard.release(k_x)
+        keyboard.release(k_y)
         keyboard.release(k_up)
         keyboard.release(k_down)
         keyboard.release(k_left)
@@ -34,52 +36,52 @@ async def on_message(message):
     if message.channel.id == textchannelid:
         if message.content.lower() == "u" or message.content.lower() == "up":
             keyboard.press(k_up)
-            time.sleep(0.2)
+            await asyncio.sleep(0.2)
             keyboard.release(k_up)
         elif message.content.lower() == "d" or message.content.lower() == "down":
             keyboard.press(k_down)
-            time.sleep(0.2)
+            await asyncio.sleep(0.2)
             keyboard.release(k_down)
         elif message.content.lower() == "l" or message.content.lower() == "left":
             keyboard.press(k_left)
-            time.sleep(0.2)
+            await asyncio.sleep(0.2)
             keyboard.release(k_left)
         elif message.content.lower() == "r" or message.content.lower() == "right":
             keyboard.press(k_right)
-            time.sleep(0.2)
+            await asyncio.sleep(0.2)
             keyboard.release(k_right)
         elif message.content.lower() == "a":
-            keyboard.press('1')
-            time.sleep(0.2)
-            keyboard.release('1')
+            keyboard.press(k_a)
+            await asyncio.sleep(0.2)
+            keyboard.release(k_a)
         elif message.content.lower() == "b":
-            keyboard.press('2')
-            time.sleep(0.2)
-            keyboard.release('2')
+            keyboard.press(k_b)
+            await asyncio.sleep(0.2)
+            keyboard.release(k_b)
         elif message.content.lower() == "x":
-            keyboard.press('3')
-            time.sleep(0.2)
-            keyboard.release('3')
+            keyboard.press(k_x)
+            await asyncio.sleep(0.2)
+            keyboard.release(k_x)
         elif message.content.lower() == "y":
-            keyboard.press('4')
-            time.sleep(0.2)
-            keyboard.release('4')
+            keyboard.press(k_y)
+            await asyncio.sleep(0.2)
+            keyboard.release(k_y)
         elif message.content.lower() == "lb":
-            keyboard.press('5')
-            time.sleep(0.2)
-            keyboard.release('5')
+            keyboard.press(k_lb)
+            await asyncio.sleep(0.2)
+            keyboard.release(k_lb)
         elif message.content.lower() == "rb":
-            keyboard.press('6')
-            time.sleep(0.2)
-            keyboard.release('6')
+            keyboard.press(k_rb)
+            await asyncio.sleep(0.2)
+            keyboard.release(k_rb)
         elif message.content.lower() == "start":
-            keyboard.press('7')
-            time.sleep(0.2)
-            keyboard.release('7')
+            keyboard.press(k_start)
+            await asyncio.sleep(0.2)
+            keyboard.release(k_start)
         elif message.content.lower() == "select":
-            keyboard.press('8')
-            time.sleep(0.2)
-            keyboard.release('8')
+            keyboard.press(k_select)
+            await asyncio.sleep(0.2)
+            keyboard.release(k_select)
         else:
             global keyp
             m = message.content.lower()
@@ -88,58 +90,62 @@ async def on_message(message):
                 try:
                     if int(m) < 16:
                         for x in range(0,int(m)):
-                            keyboard.press('1')
-                            time.sleep(0.2)
-                            keyboard.release('1')
-                            time.sleep(0.1)
+                            keyboard.press(k_a)
+                            await asyncio.sleep(0.2)
+                            keyboard.release(k_a)
+                            await asyncio.sleep(0.1)
                 except:
                     if m == "hold":
-                        keyboard.press('1')
+                        keyboard.press(k_a)
                         keyp = True
             elif m.startswith('b '):
                 m = m.replace('b ','')
                 try:
                     if int(m) < 16:
                         for x in range(0,int(m)):
-                            keyboard.press('2')
-                            time.sleep(0.2)
-                            keyboard.release('2')
-                            time.sleep(0.1)
+                            keyboard.press(k_b)
+                            await asyncio.sleep(0.2)
+                            keyboard.release(k_b)
+                            await asyncio.sleep(0.1)
                 except:
                     if m == "hold":
-                        keyboard.press('2')
+                        keyboard.press(k_b)
                         keyp = True
             elif m.startswith('x '):
                 m = m.replace('x ','')
                 try:
                     if int(m) < 16:
                         for x in range(0,int(m)):
-                            keyboard.press('3')
-                            time.sleep(0.2)
-                            keyboard.release('3')
-                            time.sleep(0.1)
+                            keyboard.press(k_x)
+                            await asyncio.sleep(0.2)
+                            keyboard.release(k_x)
+                            await asyncio.sleep(0.1)
                 except:
-                    pass
+                    if m == "hold":
+                        keyboard.press(k_x)
+                        keyp = True
             elif m.startswith('y '):
                 m = m.replace('y ','')
                 try:
                     if int(m) < 16:
                         for x in range(0,int(m)):
-                            keyboard.press('4')
-                            time.sleep(0.2)
-                            keyboard.release('4')
-                            time.sleep(0.1)
+                            keyboard.press(k_y)
+                            await asyncio.sleep(0.2)
+                            keyboard.release(k_y)
+                            await asyncio.sleep(0.1)
                 except:
-                    pass
+                    if m == "hold":
+                        keyboard.press(k_y)
+                        keyp = True
             elif m.startswith('u '):
                 m = m.replace('u ','')
                 try:
                     if int(m) < 16:
                         for x in range(0,int(m)):
                             keyboard.press(k_up)
-                            time.sleep(0.2)
+                            await asyncio.sleep(0.2)
                             keyboard.release(k_up)
-                            time.sleep(0.1)
+                            await asyncio.sleep(0.1)
                 except:
                     if m == "hold":
                         keyboard.press(k_up)
@@ -150,9 +156,9 @@ async def on_message(message):
                     if int(m) < 16:
                         for x in range(0,int(m)):
                             keyboard.press(k_down)
-                            time.sleep(0.2)
+                            await asyncio.sleep(0.2)
                             keyboard.release(k_down)
-                            time.sleep(0.1)
+                            await asyncio.sleep(0.1)
                 except:
                     if m == "hold":
                         keyboard.press(k_down)
@@ -163,9 +169,9 @@ async def on_message(message):
                     if int(m) < 16:
                         for x in range(0,int(m)):
                             keyboard.press(k_left)
-                            time.sleep(0.2)
+                            await asyncio.sleep(0.2)
                             keyboard.release(k_left)
-                            time.sleep(0.1)
+                            await asyncio.sleep(0.1)
                 except:
                     if m == "hold":
                         keyboard.press(k_left)
@@ -176,9 +182,9 @@ async def on_message(message):
                     if int(m) < 16:
                         for x in range(0,int(m)):
                             keyboard.press(k_right)
-                            time.sleep(0.2)
+                            await asyncio.sleep(0.2)
                             keyboard.release(k_right)
-                            time.sleep(0.1)
+                            await asyncio.sleep(0.1)
                 except:
                     if m == "hold":
                         keyboard.press(k_right)
@@ -188,10 +194,10 @@ async def on_message(message):
                 try:
                     if int(m) < 16:
                         for x in range(0,int(m)):
-                            keyboard.press('5')
-                            time.sleep(0.2)
-                            keyboard.release('5')
-                            time.sleep(0.1)
+                            keyboard.press(k_lb)
+                            await asyncio.sleep(0.2)
+                            keyboard.release(k_lb)
+                            await asyncio.sleep(0.1)
                 except:
                     pass
             elif m.startswith('rb '):
@@ -199,10 +205,10 @@ async def on_message(message):
                 try:
                     if int(m) < 16:
                         for x in range(0,int(m)):
-                            keyboard.press('6')
-                            time.sleep(0.2)
-                            keyboard.release('6')
-                            time.sleep(0.1)
+                            keyboard.press(k_rb)
+                            await asyncio.sleep(0.2)
+                            keyboard.release(k_rb)
+                            await asyncio.sleep(0.1)
                 except:
                     pass
             elif m.startswith('start '):
@@ -210,10 +216,10 @@ async def on_message(message):
                 try:
                     if int(m) < 16:
                         for x in range(0,int(m)):
-                            keyboard.press('7')
-                            time.sleep(0.2)
-                            keyboard.release('7')
-                            time.sleep(0.1)
+                            keyboard.press(k_start)
+                            await asyncio.sleep(0.2)
+                            keyboard.release(k_start)
+                            await asyncio.sleep(0.1)
                 except:
                     pass
             elif m.startswith('select '):
@@ -221,10 +227,10 @@ async def on_message(message):
                 try:
                     if int(m) < 16:
                         for x in range(0,int(m)):
-                            keyboard.press('8')
-                            time.sleep(0.2)
-                            keyboard.release('8')
-                            time.sleep(0.1)
+                            keyboard.press(k_select)
+                            await asyncio.sleep(0.2)
+                            keyboard.release(k_select)
+                            await asyncio.sleep(0.1)
                 except:
                     pass
     await bot.process_commands(message)
