@@ -5,9 +5,9 @@ prefix = '$'
 # The game the bot's status is playing.
 activity = 'all the games'
 # The ID of the text-channel the bot reads messages from.
-textchannelid = 756311548087107685
+textchannelid = 1234567890123
 # Your ID for stopping the bot or calibrating it.
-myid = 326537784519294978
+myid = 1234567890123
 
 # Keys
 

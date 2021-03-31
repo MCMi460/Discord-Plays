@@ -283,9 +283,57 @@ async def restart(ctx):
 @bot.command()
 async def calibrate(ctx,button:str=None,calkey:str=None):
     if ctx.author.id == myid:
-        if not button or not calkey:
-            await ctx.send("Please specifiy a button and key to calibrate.")
+        global k_up, k_down, k_left, k_right, k_a, k_b, k_x, k_y, k_lb, k_rb, k_start, k_select
+        if not button:
+            await ctx.send("Please specifiy a button to calibrate. You can calibrate to these buttons:\n"
+            "UP\n"
+            "DOWN\n"
+            "LEFT\n"
+            "RIGHT\n"
+            "A\n"
+            "B\n"
+            "X\n"
+            "Y\n"
+            "LB (LEFT TRIGGER)\n"
+            "RB (RIGHT TRIGGER)\n"
+            "START\n"
+            "SELECT\n")
             return
-        # do this later lol
+        if not calkey:
+            await ctx.send(f"Please specifiy a key to calibrate `{button}` to.")
+            return
+        if len(calkey) != 1:
+            await ctx.send("Please type a supported key on your keyboard.")
+            return
+        calkey = calkey.lower()
+        button = button.lower()
+        if button == "up" or button == "u":
+            k_up = calkey
+        elif button == "down" or button == "d":
+            k_down = calkey
+        elif button == "left" or button == "l":
+            k_left = calkey
+        elif button == "right" or button == "r":
+            k_right = calkey
+        elif button == "a":
+            k_a = calkey
+        elif button == "b":
+            k_b = calkey
+        elif button == "x":
+            k_x = calkey
+        elif button == "y":
+            k_y = calkey
+        elif button == "start":
+            k_start = calkey
+        elif button == "select":
+            k_select = calkey
+        elif button == "lb":
+            k_lb = calkey
+        elif button == "rb":
+            k_rb = calkey
+        else:
+            await ctx.send("Undefined button. Please choose a supported button.")
+            return
+        await ctx.send(f"Successfully remapped button {button} to {calkey}!")
 
 bot.run(token)
