@@ -32,7 +32,7 @@ Open a command-line, go to the directory with the `bot.py`, and run `python3 bot
 
 The bot is in its beta at the moment, as there are many better ways to code it that would allow better user-input, safer environments, etc. At the moment, please be be patient for new updates. Feel free to use the code as-is, however. Thank you.
 
-\[█████████▁▁▁\] 75% Complete
+\[⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷\] 99% Complete
 
 ---
 ## Requirements:

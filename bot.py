@@ -307,33 +307,53 @@ async def calibrate(ctx,button:str=None,calkey:str=None):
             return
         calkey = calkey.lower()
         button = button.lower()
-        if button == "up" or button == "u":
-            k_up = calkey
-        elif button == "down" or button == "d":
-            k_down = calkey
-        elif button == "left" or button == "l":
-            k_left = calkey
-        elif button == "right" or button == "r":
-            k_right = calkey
-        elif button == "a":
-            k_a = calkey
-        elif button == "b":
-            k_b = calkey
-        elif button == "x":
-            k_x = calkey
-        elif button == "y":
-            k_y = calkey
-        elif button == "start":
-            k_start = calkey
-        elif button == "select":
-            k_select = calkey
-        elif button == "lb":
-            k_lb = calkey
-        elif button == "rb":
-            k_rb = calkey
-        else:
-            await ctx.send("Undefined button. Please choose a supported button.")
-            return
-        await ctx.send(f"Successfully remapped button {button} to {calkey}!")
+        with open ("setup.py","r") as remap:
+            contents = remap.read()
+            with open ("setup.py","w") as remapwrite:
+                if button == "up" or button == "u":
+                    replace = contents.replace(f"k_up = '{k_up}", f"k_up = '{calkey}")
+                    k_up = calkey
+                elif button == "down" or button == "d":
+                    replace = contents.replace(f"k_down = '{k_down}", f"k_down = '{calkey}")
+                    k_down = calkey
+                elif button == "left" or button == "l":
+                    replace = contents.replace(f"k_left = '{k_left}", f"k_left = '{calkey}")
+                    k_left = calkey
+                elif button == "right" or button == "r":
+                    replace = contents.replace(f"k_right = '{k_right}", f"k_right = '{calkey}")
+                    k_right = calkey
+                elif button == "a":
+                    replace = contents.replace(f"k_a = '{k_a}", f"k_a = '{calkey}")
+                    k_a = calkey
+                elif button == "b":
+                    replace = contents.replace(f"k_b = '{k_b}", f"k_b = '{calkey}")
+                    k_b = calkey
+                elif button == "x":
+                    replace = contents.replace(f"k_x = '{k_x}", f"k_x = '{calkey}")
+                    k_x = calkey
+                elif button == "y":
+                    replace = contents.replace(f"k_y = '{k_y}", f"k_y = '{calkey}")
+                    k_y = calkey
+                elif button == "start":
+                    replace = contents.replace(f"k_start = '{k_start}", f"k_start = '{calkey}")
+                    k_start = calkey
+                elif button == "select":
+                    replace = contents.replace(f"k_select = '{k_select}", f"k_select = '{calkey}")
+                    k_select = calkey
+                elif button == "lb":
+                    replace = contents.replace(f"k_lb = '{k_lb}", f"k_lb = '{calkey}")
+                    k_lb = calkey
+                elif button == "rb":
+                    replace = contents.replace(f"k_rb = '{k_rb}", f"k_rb = '{calkey}")
+                    k_rb = calkey
+                else:
+                    await ctx.send("Undefined button. Please choose a supported button.")
+                    return
+                failed = contents == replace
+                if failed:
+                    await ctx.send("No changes were made.")
+                    return
+                remapwrite.write(replace)
+                await ctx.send(f"Successfully remapped button {button} to {calkey}!")
 
 bot.run(token)
