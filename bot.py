@@ -265,6 +265,8 @@ async def help(ctx):
     embed.add_field(name="Left Trigger", value="Type `LB`")
     embed.add_field(name="Right Trigger", value="Type `RB`")
     embed.add_field(name="Stacking and holding buttons", value="You can stack button presses or hold them, as well. For example, you can press the A button 15 times (which is the max possible to stack) consecutively by typing `A 15`. You can hold the A button for 10 seconds by typing `A hold`. These functions work for every button.", inline=False)
+    if ctx.author.id == myid:
+        embed.add_field(name=f"{prefix}calibrate", value=f"This command is used to change what key a button will be. For example, `{prefix}calibrate A {key_a}` would change the A button to {key_a}. Of course, the A button is already {key_a}, but you get the point.", inline=False)
     await ctx.send(embed=embed)
 
 @bot.command()
@@ -287,7 +289,7 @@ async def calibrate(ctx,button:str=None,calkey:str=None):
     if ctx.author.id == myid:
         global k_up, k_down, k_left, k_right, k_a, k_b, k_x, k_y, k_lb, k_rb, k_start, k_select
         if not button:
-            await ctx.send(f"Please specifiy a button to calibrate (example: {prefix}calibrate right 3). You can calibrate to these buttons:\n"
+            await ctx.send(f"Please specifiy a button to calibrate. You can calibrate to these buttons:\n"
             "UP\n"
             "DOWN\n"
             "LEFT\n"
