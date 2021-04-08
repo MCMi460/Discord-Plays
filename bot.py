@@ -45,8 +45,6 @@ async def taskscreenshot():
 @bot.event
 async def on_message(message):
     if message.channel.id == textchannelid:
-        if loadscrn == True and message.author != bot.user and message.content.startswith(prefix) == False:
-            await screengrab(message.channel)
         if message.content.lower() == "u" or message.content.lower() == "up":
             keyboard.press(k_up)
             await asyncio.sleep(0.2)
