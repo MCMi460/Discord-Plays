@@ -2,11 +2,15 @@
 
 *Allows the remote control of a game from a text-channel in Discord*
 
+![screenshot](/images/screenshot.png?raw=true)
+
 ## Warning!
 
-This bot allows control of the keyboard of your computer while it is running to allow Discord users to play a game you stream to a voice-channel. Please be cautious of what power you give strangers over your computer.
+PLEASE RUN THIS IN A VIRTUAL MACHINE.
 
-If, at any time, you feel unsafe of running this program on your computer but still would like to use it, please download a Virtual Machine and run it there.
+This program allows the capturing of your screen and the controlling of your computer. Please run this in a Virtual Machine.
+
+The screenshots it takes will be taken of both screens, so be certain to only have one screen while running this.
 
 ---
 ## How to use
@@ -40,6 +44,11 @@ The bot is in its beta at the moment, as there are many better ways to code it t
 -[Python 3.9][python]
 <br>-[discord.py][discordpy]
 <br>-[pynput][pynput]
+<br>
+### Optional Requirements
+*(These are requirements only if you want to use the screenshot plugin)*
+<br>-[pyscreenshot][pyscrn]
+<br>-[Pillow][pillow]
 
 *(All requirements used visible in [bot.py][bot])*
 
@@ -60,5 +69,7 @@ You don't have to give credit to me. That's not what Github is for (in my opinio
 [pynput]: https://pypi.org/project/pynput/
 [discord_dev]: https://discord.com/developers/applications
 [pip]: https://pypi.org/project/pip/
+[pyscrn]: https://pypi.org/project/pyscreenshot/
+[pillow]: https://pypi.org/project/Pillow/
 
 <!--- You found an easter egg! Here's a cookie UwU :totallyrealcookie.png: -->

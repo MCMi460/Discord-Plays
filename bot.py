@@ -4,9 +4,7 @@ import asyncio
 import os
 import sys
 from discord.utils import get
-from discord.ext.commands import Bot
-from discord.ext.commands import has_permissions
-from setup import token, prefix, activity, textchannelid, myid, k_up, k_down, k_left, k_right, k_a, k_b, k_x, k_y, k_lb, k_rb, k_start, k_select
+from setup import token, prefix, activity, loadscrn, textchannelid, myid, k_up, k_down, k_left, k_right, k_a, k_b, k_x, k_y, k_lb, k_rb, k_start, k_select
 from pynput.keyboard import Key, Controller
 
 keyboard = Controller()
@@ -18,6 +16,8 @@ bot.remove_command("help")
 @bot.event
 async def on_message(message):
     if message.channel.id == textchannelid:
+        if loadscrn == True and message.author != bot.user and message.content.startswith(prefix) == False:
+            await screengrab(message.channel)
         if message.content.lower() == "u" or message.content.lower() == "up":
             keyboard.press(k_up)
             await asyncio.sleep(0.2)
@@ -244,6 +244,25 @@ async def on_ready():
     print(f'Present in {len(bot.guilds)} servers.')
     print('------')
     await bot.change_presence(status=discord.Status.online, activity=discord.Activity(type=typeStatusPlay, name=activity))
+    got = False
+    for guild in bot.guilds:
+        for channel in guild.channels:
+            if channel.id == textchannelid:
+                got = True
+    if not got:
+        sys.exit("Please enter the text-channel ID in the setup.py file.\n"
+        "If you already have, make certain the bot is in the same server as the text-channel.")
+    if loadscrn:
+        import pyscreenshot as ImageGrab
+        import io
+        global screengrab
+        async def screengrab(channel):
+            screen = ImageGrab.grab()
+            arr = io.BytesIO()
+            screen.save(arr, format='PNG')
+            arr.seek(0)
+            file = discord.File(arr,'game.png')
+            await channel.send(file=file)
 
 @bot.command(pass_context=True)
 async def help(ctx):
@@ -267,6 +286,8 @@ async def help(ctx):
     embed.add_field(name="Stacking and holding buttons", value="You can stack button presses or hold them, as well. For example, you can press the A button 15 times (which is the max possible to stack) consecutively by typing `A 15`. You can hold the A button for 10 seconds by typing `A hold`. These functions work for every button.", inline=False)
     if ctx.author.id == myid:
         embed.add_field(name=f"{prefix}calibrate", value=f"This command is used to change what key a button will be. For example, `{prefix}calibrate A {k_a}` would change the A button to {k_a}. Of course, the A button is already {k_a}, but you get the point.", inline=False)
+        embed.add_field(name=f"{prefix}load_screenshots", value=f"Requires two installations to run. It will display a screenshot every time a message in the text channel is sent.\n"
+        f"If you want to set loading screenshots as a default, do it like this `{prefix}load_screenshots True`. The reverse also applies: `{prefix}load_screenshots False`", inline=False)
     await ctx.send(embed=embed)
 
 @bot.command()
@@ -283,6 +304,47 @@ async def restart(ctx):
         await ctx.send("Restarting/ending session...")
         print("Restarting...")
         os.execl(sys.executable, sys.executable, *sys.argv)
+
+@bot.command()
+async def load_screenshots(ctx,*,default = None):
+    if ctx.author.id == myid:
+        global loadscrn
+        if loadscrn and not default:
+            await ctx.send("This plugin is already loaded!\n"
+            "If you are having trouble with it working, please make an issue on Github.\n"
+            "https://github.com/MCMi460/Discord-Plays/issues/new")
+        if default:
+            c = default.lower()
+            with open ("setup.py","r") as read:
+                contents = read.read()
+                with open ("setup.py","w") as write:
+                    work = True
+                    if c == "true" or c == "on" or c == "yes":
+                        try:
+                            replace = contents.replace("loadscrn = False","loadscrn = True")
+                        except:
+                            work = False
+                    if c == "false" or c == "off" or c == "no":
+                        try:
+                            replace = contents.replace("loadscrn = True","loadscrn = False")
+                        except:
+                            work = False
+                    if contents == replace:
+                        await ctx.send("The plugin is already set to that.")
+                        write.write(contents)
+                        return
+                    write.write(replace)
+        import pyscreenshot as ImageGrab
+        import io
+        global screengrab
+        loadscrn = True
+        async def screengrab(channel):
+            screen = ImageGrab.grab()
+            arr = io.BytesIO()
+            screen.save(arr, format='PNG')
+            arr.seek(0)
+            file = discord.File(arr,'game.png')
+            await channel.send(file=file)
 
 @bot.command()
 async def calibrate(ctx,button:str=None,calkey:str=None):
@@ -353,9 +415,9 @@ async def calibrate(ctx,button:str=None,calkey:str=None):
                 else:
                     await ctx.send("Undefined button. Please choose a supported button.")
                     return
-                failed = contents == replace
-                if failed:
+                if contents == replace:
                     await ctx.send("No changes were made.")
+                    remapwrite.write(contents)
                     return
                 remapwrite.write(replace)
                 await ctx.send(f"Successfully remapped button {button} to {calkey}!")

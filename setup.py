@@ -9,6 +9,9 @@ textchannelid = 1234567890123
 # Your ID for stopping the bot or calibrating it.
 myid = 1234567890123
 
+# Load screenshot plugin on start
+loadscrn = False
+
 # Keys
 
 k_up = 'q'
