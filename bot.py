@@ -1,10 +1,10 @@
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 import asyncio
 import os
 import sys
 from discord.utils import get
-from setup import token, prefix, activity, loadscrn, textchannelid, myid, k_up, k_down, k_left, k_right, k_a, k_b, k_x, k_y, k_lb, k_rb, k_start, k_select
+from setup import token, prefix, activity, loadscrn, loadscrnchannel, textchannelid, myid, k_up, k_down, k_left, k_right, k_a, k_b, k_x, k_y, k_lb, k_rb, k_start, k_select
 from pynput.keyboard import Key, Controller
 
 keyboard = Controller()
@@ -12,6 +12,35 @@ intents = discord.Intents.default()
 bot = commands.Bot(command_prefix=prefix,intents=intents)
 typeStatusPlay = discord.ActivityType.playing
 bot.remove_command("help")
+
+def loadloadscrn():
+    import pyscreenshot as ImageGrab
+    import io
+    global screengrab
+    taskscreenshot.start()
+    async def screengrab(channel):
+        screen = ImageGrab.grab()
+        arr = io.BytesIO()
+        screen.save(arr, format='PNG')
+        arr.seek(0)
+        file = discord.File(arr,'game.png')
+        await channel.send(file=file)
+
+@tasks.loop(seconds=2)
+async def taskscreenshot():
+    if not loadscrn:
+        taskscreenshot.stop()
+        return
+    if not loadscrnchannel:
+        print(f"Please set a channel to send screenshots in with {prefix}setscreenshotchannel\n"
+        "Thanks!")
+        return
+    servers = bot.guilds
+    for server in servers:
+        for channel in server.channels:
+            if channel.id == loadscrnchannel:
+                await screengrab(channel)
+                return
 
 @bot.event
 async def on_message(message):
@@ -253,16 +282,7 @@ async def on_ready():
         sys.exit("Please enter the text-channel ID in the setup.py file.\n"
         "If you already have, make certain the bot is in the same server as the text-channel.")
     if loadscrn:
-        import pyscreenshot as ImageGrab
-        import io
-        global screengrab
-        async def screengrab(channel):
-            screen = ImageGrab.grab()
-            arr = io.BytesIO()
-            screen.save(arr, format='PNG')
-            arr.seek(0)
-            file = discord.File(arr,'game.png')
-            await channel.send(file=file)
+        loadloadscrn()
 
 @bot.command(pass_context=True)
 async def help(ctx):
@@ -288,6 +308,7 @@ async def help(ctx):
         embed.add_field(name=f"{prefix}calibrate", value=f"This command is used to change what key a button will be. For example, `{prefix}calibrate A {k_a}` would change the A button to {k_a}. Of course, the A button is already {k_a}, but you get the point.", inline=False)
         embed.add_field(name=f"{prefix}load_screenshots", value=f"Requires two installations to run. It will display a screenshot every time a message in the text channel is sent.\n"
         f"If you want to set loading screenshots as a default, do it like this `{prefix}load_screenshots True`. The reverse also applies: `{prefix}load_screenshots False`", inline=False)
+        embed.add_field(name=f"{prefix}setscreenshotchannel", value=f"Sets the default channel for screenshots to be sent.", inline=False)
     await ctx.send(embed=embed)
 
 @bot.command()
@@ -322,11 +343,14 @@ async def load_screenshots(ctx,*,default = None):
                     if c == "true" or c == "on" or c == "yes":
                         try:
                             replace = contents.replace("loadscrn = False","loadscrn = True")
+                            loadscrn = True
+                            loadloadscrn()
                         except:
                             work = False
                     if c == "false" or c == "off" or c == "no":
                         try:
                             replace = contents.replace("loadscrn = True","loadscrn = False")
+                            loadscrn = False
                         except:
                             work = False
                     if contents == replace:
@@ -334,17 +358,25 @@ async def load_screenshots(ctx,*,default = None):
                         write.write(contents)
                         return
                     write.write(replace)
-        import pyscreenshot as ImageGrab
-        import io
-        global screengrab
-        loadscrn = True
-        async def screengrab(channel):
-            screen = ImageGrab.grab()
-            arr = io.BytesIO()
-            screen.save(arr, format='PNG')
-            arr.seek(0)
-            file = discord.File(arr,'game.png')
-            await channel.send(file=file)
+        else:
+            loadscrn = True
+            loadloadscrn()
+
+@bot.command()
+async def setscreenshotchannel(ctx):
+    if ctx.author.id == myid and loadscrn == True:
+        global loadscrnchannel
+        with open ("setup.py","r") as read:
+            contents = read.read()
+            with open ("setup.py","w") as write:
+                replace = contents.replace(f"loadscrnchannel = {loadscrnchannel}",f"loadscrnchannel = {ctx.channel.id}")
+                if replace != contents:
+                    loadscrnchannel = ctx.channel.id
+                    await ctx.send(f"Screenshot channel set to <#{ctx.channel.id}>!")
+                    write.write(replace)
+                else:
+                    await ctx.send(f"No changes have been made.")
+                    write.write(contents)
 
 @bot.command()
 async def calibrate(ctx,button:str=None,calkey:str=None):

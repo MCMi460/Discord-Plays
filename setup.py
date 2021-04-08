@@ -11,6 +11,7 @@ myid = 1234567890123
 
 # Load screenshot plugin on start
 loadscrn = False
+loadscrnchannel = None
 
 # Keys
 
