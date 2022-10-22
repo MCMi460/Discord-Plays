@@ -4,11 +4,12 @@ import asyncio
 import os
 import sys
 from discord.utils import get
-from setup import token, prefix, activity, loadscrn, loadscrnchannel, textchannelid, myid, k_up, k_down, k_left, k_right, k_a, k_b, k_x, k_y, k_lb, k_rb, k_start, k_select
+from setup import *
 from pynput.keyboard import Key, Controller
 
 keyboard = Controller()
 intents = discord.Intents.default()
+intents.message_content = True
 bot = commands.Bot(command_prefix=prefix,intents=intents)
 typeStatusPlay = discord.ActivityType.playing
 bot.remove_command("help")
@@ -44,6 +45,11 @@ async def taskscreenshot():
 
 @bot.event
 async def on_message(message):
+    # Okay, look, I wrote this long ago
+    # I know how stupid it is
+    # But I'm too lazy to make it look nice
+    # So just bare with it, okay?
+    # Sorry, and thanks
     if message.channel.id == textchannelid:
         if message.content.lower() == "u" or message.content.lower() == "up":
             keyboard.press(k_up)
@@ -282,12 +288,12 @@ async def on_ready():
     if loadscrn:
         loadloadscrn()
 
-@bot.command(pass_context=True)
+@bot.command()
 async def help(ctx):
     embed = discord.Embed(title="Report a bug", url="https://mi460.dev/bugs", colour=discord.Colour(0xe07314), description="**You are on the beta build**\n"
     "*Relays button input from a Discord text channel to a game*")
 
-    embed.set_author(name=f"{bot.user.name}#{bot.user.discriminator}",icon_url=f"{bot.user.avatar_url}")
+    embed.set_author(name=f"{bot.user.name}#{bot.user.discriminator}",icon_url=f"{bot.user.display_avatar.url}")
 
     embed.add_field(name="Up D-PAD", value="Type `U`")
     embed.add_field(name="Down D-PAD", value="Type `D`")
@@ -332,33 +338,26 @@ async def load_screenshots(ctx,*,default = None):
             await ctx.send("This plugin is already loaded!\n"
             "If you are having trouble with it working, please make an issue on Github.\n"
             "https://github.com/MCMi460/Discord-Plays/issues/new")
-        if default:
-            c = default.lower()
-            with open ("setup.py","r") as read:
-                contents = read.read()
-                with open ("setup.py","w") as write:
-                    work = True
-                    if c == "true" or c == "on" or c == "yes":
-                        try:
-                            replace = contents.replace("loadscrn = False","loadscrn = True")
-                            loadscrn = True
-                            loadloadscrn()
-                        except:
-                            work = False
-                    if c == "false" or c == "off" or c == "no":
-                        try:
-                            replace = contents.replace("loadscrn = True","loadscrn = False")
-                            loadscrn = False
-                        except:
-                            work = False
-                    if contents == replace:
-                        await ctx.send("The plugin is already set to that.")
-                        write.write(contents)
-                        return
-                    write.write(replace)
+            return
+        if not default:
+            c = "true"
         else:
-            loadscrn = True
-            loadloadscrn()
+            c = default.lower()
+        with open ("setup.py","r") as read:
+            contents = read.read()
+            with open ("setup.py","w") as write:
+                if c.startswith("true") or c.startswith("on") or c.startswith("yes"):
+                    replace = contents.replace("loadscrn = False","loadscrn = True")
+                    loadscrn = True
+                    loadloadscrn()
+                elif c.startswith("false") or c.startswith("off") or c.startswith("no"):
+                    replace = contents.replace("loadscrn = True","loadscrn = False")
+                    loadscrn = False
+                write.write(replace)
+        if contents == replace:
+            await ctx.send("The plugin is already set to that.")
+        else:
+            await ctx.send("Sucessfully turned load_screenshots " + ("on" if loadscrn else "off"))
 
 @bot.command()
 async def setscreenshotchannel(ctx):
